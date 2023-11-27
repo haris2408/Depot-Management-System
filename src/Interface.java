@@ -1,18 +1,24 @@
 import java.util.Scanner;
+import java.io.FileWriter;   // Import the FileWriter class
+import java.io.IOException;  // Import the IOException class to handle errors
 
 public class Interface
 {
-	private Depot depot1, depot2;
+	private Depot[] depotArr;
 
 	//Default Contructor
 	public Interface(){
-		this.depot1 = new Depot();
-		this.depot2 = new Depot();
+		// this.depot1 = new Depot();
+		// this.depot2 = new Depot();
+		this.depotArr = new Depot[4];
+		for(int i = 0;i<4;i++){
+			this.depotArr[i] = new Depot();
+		}
 	}
 
 	private int printMenuandgetChoice(Scanner scannerObj){
 		int choice = -1;
-		while(choice<0 || choice>8){
+		while(choice<0 || choice>9){
 			System.out.println("Menu");
 			System.out.println("--------------");
 			System.out.println("1.Add a depot");
@@ -23,6 +29,7 @@ public class Interface
 			System.out.println("6.Display list of products of a specific depot");
 			System.out.println("7.Check if a product exists in a depot");
 			System.out.println("8.Cumulative value of all products in a depot");
+			System.out.println("9.Export depot and product information to a text file");
 			System.out.println("0.EXIT");
 			System.out.print("\t\tCHOICE: ");	
 			choice = scannerObj.nextInt();
@@ -37,30 +44,45 @@ public class Interface
 			DName = scannerObj.next();
 		DName = DName.toLowerCase();
 		//System.out.println(this.depot1.getName());;
-		if(DName.equals(this.depot1.getName())){
+		if(DName.equals(this.depotArr[0].getName())){
 			System.out.println("ERROR: depot with this name exists already!!!");
-		} else if(DName.equals(this.depot2.getName())){
+		} 
+		else if(DName.equals(this.depotArr[1].getName())){
+			System.out.println("ERROR: depot with this name exists already!!!");
+		}
+		else if(DName.equals(this.depotArr[2].getName())){
+			System.out.println("ERROR: depot with this name exists already!!!");
+		}
+		else if(DName.equals(this.depotArr[3].getName())){
 			System.out.println("ERROR: depot with this name exists already!!!");
 		}
 		else{
-			if(this.depot1.isEmpty()){
-				this.depot1.setName(DName);
+			if(this.depotArr[0].isEmpty()){
+				this.depotArr[0].setName(DName);
 				System.out.println("Depot added succesfully");
 			}
-			else if(this.depot2.isEmpty()){
-				this.depot2.setName(DName);
+			else if(this.depotArr[1].isEmpty()){
+				this.depotArr[1].setName(DName);
+				System.out.println("Depot added succesfully");
+			}
+			else if(this.depotArr[2].isEmpty()){
+				this.depotArr[2].setName(DName);
+				System.out.println("Depot added succesfully");
+			}
+			else if(this.depotArr[3].isEmpty()){
+				this.depotArr[3].setName(DName);
 				System.out.println("Depot added succesfully");
 			}
 			else{
-				System.out.println("ERROR: Both of the slots are filled. please delete a depot to add a new one");
+				System.out.println("ERROR: All of the slots are filled. please delete a depot to add a new one");
 			}
 		}
 
 	}
 
 	private void removeDepot(Scanner scannerObj){
-		if(this.depot1.isEmpty() && this.depot2.isEmpty()){
-			System.out.println("\nNo depot to delete as both depots are empty\n");
+		if(this.depotArr[0].isEmpty() && this.depotArr[1].isEmpty() && this.depotArr[2].isEmpty() && this.depotArr[3].isEmpty()){
+			System.out.println("\nNo depot to delete as all depots are empty\n");
 			return;
 		}
 		System.out.print("\nDepot Name: ");
@@ -69,12 +91,20 @@ public class Interface
 			DName = scannerObj.next();
 		DName = DName.toLowerCase();
 
-		if(DName.equals(this.depot1.getName())){
-			this.depot1.delete();
+		if(DName.equals(this.depotArr[0].getName())){
+			this.depotArr[0].delete();
 			System.out.println("\nDepot deleted Succesfully!\n");
 		}
-		else if(DName.equals(this.depot2.getName())){
-			this.depot2.delete();
+		else if(DName.equals(this.depotArr[1].getName())){
+			this.depotArr[1].delete();
+			System.out.println("\nDepot deleted Succesfully!\n");
+		}
+		else if(DName.equals(this.depotArr[2].getName())){
+			this.depotArr[2].delete();
+			System.out.println("\nDepot deleted Succesfully!\n");
+		}
+		else if(DName.equals(this.depotArr[3].getName())){
+			this.depotArr[3].delete();
 			System.out.println("\nDepot deleted Succesfully!\n");
 		}
 		else{
@@ -84,7 +114,7 @@ public class Interface
 	}
 
 	private boolean isDepotPresent(String Dname){
-		if(Dname.equals(this.depot1.getName()) || Dname.equals(this.depot2.getName())){
+		if(Dname.equals(this.depotArr[0].getName()) || Dname.equals(this.depotArr[1].getName()) || Dname.equals(this.depotArr[2].getName()) || Dname.equals(this.depotArr[3].getName())){
 			return true;
 		}
 		return false;
@@ -100,11 +130,17 @@ public class Interface
 			System.out.println("\nERROR: No depot exists with such name\n");
 			return;
 		}
-		if(DName.equals(this.depot1.getName())){
-			this.depot1.addProduct(scannerObj);
-		}
-		else{
-			this.depot2.addProduct(scannerObj);
+		// if(DName.equals(this.depot1.getName())){
+		// 	this.depot1.addProduct(scannerObj);
+		// }
+		// else{
+		// 	this.depot2.addProduct(scannerObj);
+		// }
+		for(int i = 0;i<4;i++){
+			if(DName.equals(this.depotArr[i].getName())){
+				this.depotArr[i].addProduct(scannerObj);
+				return;
+			}
 		}
 	}
 
@@ -123,24 +159,34 @@ public class Interface
 		if(scannerObj.hasNext())
 			PName = scannerObj.next();
 		PName = PName.toLowerCase();
-		if(DName.equals(this.depot1.getName())){
-			this.depot1.removeItem(PName);
-		}
-		else{
-			this.depot2.removeItem(PName);
+		// if(DName.equals(this.depot1.getName())){
+		// 	this.depot1.removeItem(PName);
+		// }
+		// else{
+		// 	this.depot2.removeItem(PName);
+		// }
+		for(int i = 0;i<4;i++){
+			if(DName.equals(this.depotArr[i].getName())){
+				this.depotArr[i].removeItem(PName);
+			}
 		}
 	}
 
 	private void DisplayListOfDepots(){
-		if(this.depot1.isEmpty() && this.depot2.isEmpty()){
+		if(this.depotArr[0].isEmpty() && this.depotArr[1].isEmpty() && this.depotArr[2].isEmpty()&& this.depotArr[2].isEmpty() && this.depotArr[3].isEmpty()){
 			System.out.println("\nNo depots exist\n");
 			return;
 		}
-		if(!this.depot1.isEmpty()){
-			System.out.printf("\nDepot "+this.depot1.getName()+" has "+this.depot1.numOfActiveProducts()+" products\n");
-		}
-		if(!this.depot2.isEmpty()){
-			System.out.printf("\nDepot "+this.depot2.getName()+" has "+this.depot2.numOfActiveProducts()+" products\n");
+		// if(!this.depot1.isEmpty()){
+		// 	System.out.printf("\nDepot "+this.depot1.getName()+" has "+this.depot1.numOfActiveProducts()+" products\n");
+		// }
+		// if(!this.depot2.isEmpty()){
+		// 	System.out.printf("\nDepot "+this.depot2.getName()+" has "+this.depot2.numOfActiveProducts()+" products\n");
+		// }
+		for(int i = 0;i<4;i++){
+			if(!this.depotArr[i].isEmpty()){
+				System.out.printf("\nDepot "+this.depotArr[i].getName()+" has "+this.depotArr[i].numOfActiveProducts()+" products\n");
+			}
 		}
 	}
 	
@@ -155,11 +201,17 @@ public class Interface
 			System.out.println("This Depot Doesn't exist");
 			return;
 		}
-		if(DName.equals(this.depot1.getName())){
-			this.depot1.displayProducts();
-		}
-		else{
-			this.depot2.displayProducts();
+		// if(DName.equals(this.depot1.getName())){
+		// 	this.depot1.displayProducts();
+		// }
+		// else{
+		// 	this.depot2.displayProducts();
+		// }
+		for(int i = 0;i<4;i++){
+			if(DName.equals(this.depotArr[i].getName())){
+				this.depotArr[i].displayProducts();
+				break;
+			}
 		}
 	}
 	
@@ -170,7 +222,7 @@ public class Interface
 			PName = scannerObj.next();
 		PName = PName.toLowerCase();
 
-		if((this.depot1.isProductpresent(PName) == -1)  &&  (this.depot2.isProductpresent(PName) == -1)){
+		if((this.depotArr[0].isProductpresent(PName) == -1)  &&  (this.depotArr[1].isProductpresent(PName) == -1) &&  (this.depotArr[2].isProductpresent(PName) == -1) &&  (this.depotArr[3].isProductpresent(PName) == -1)){
 			System.out.println("This product does not exist in any depot");
 		}
 	}
@@ -185,12 +237,37 @@ public class Interface
 			System.out.println("\nERROR: No depot exists with such name\n");
 			return;
 		}
-		if(DName.equals(this.depot1.getName())){
-			this.depot1.displayCumulativeValue();
+		// if(DName.equals(this.depot1.getName())){
+		// 	this.depot1.displayCumulativeValue();
+		// }
+		// else{
+		// 	this.depot2.displayCumulativeValue();
+		// }
+		for(int i = 0;i<4;i++){
+			if(DName.equals(this.depotArr[i].getName())){
+				this.depotArr[i].displayCumulativeValue();
+				break;
+			}
 		}
-		else{
-			this.depot2.displayCumulativeValue();
-		}
+	}
+
+
+	private void printDepotsToFile(){
+		try {
+			FileWriter myWriter = new FileWriter("Depots.txt");
+			//myWriter.write("Files in Java might be tricky, \nbut it is fun enough!");
+			for(int i = 0;i<4;i++){
+				if(!this.depotArr[i].isEmpty()){
+					myWriter.write(this.depotArr[i].toString());
+				}
+			}
+			
+			myWriter.close();
+			System.out.println("Successfully wrote to the file.");
+		  } catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		  }
 	}
 
 	public void run(){
@@ -223,6 +300,9 @@ public class Interface
 					break;
 				case 8:
 					cumulativeValueOfDepot(scannerObj);
+					break;
+				case 9:
+					printDepotsToFile();
 					break;
 				case 0:
 					checc = false;

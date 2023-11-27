@@ -67,4 +67,8 @@ public class Product
 		}
 		return false;
 	}
+	public String toString(){
+		
+		return ""+this.name+" "+this.price+" "+this.weight+" "+this.quantity;
+	}
 }
